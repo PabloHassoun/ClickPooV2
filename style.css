@@ -4061,3 +4061,8 @@ body, html {
   margin-bottom: 16px;
   filter: drop-shadow(3px 3px 0 rgba(0, 0, 0, 0.2));
 }
+/* Ensure screens fit within a single viewport */
+html, body { height: 100%; overflow: hidden; }
+.screen.active { height: 100vh; }
+.nav-icon, .back-icon { image-rendering: pixelated; }
+
