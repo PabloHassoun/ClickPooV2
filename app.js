@@ -826,6 +826,8 @@ class ClickPooUltimate {
         this.gameState.manualClicks++;
         this.gameState.xp += finalPower;
         this.gameState.profileXP += finalPower;
+        this.gameState.coins += 1;
+        this.gameState.totalCoinsEarned += 1;
 
         // Suivi des clics pour CPS
         this.gameState.recentClicks.push(currentTime);
@@ -1083,6 +1085,8 @@ class ClickPooUltimate {
             this.gameState.xp += finalPoints;
             this.gameState.profileXP += finalPoints;
             this.gameState.totalClicks++;
+            this.gameState.coins += 1;
+            this.gameState.totalCoinsEarned += 1;
             
             // Optimisation : cache la position du bouton (mise à jour toutes les 2 secondes)
             const now = Date.now();
