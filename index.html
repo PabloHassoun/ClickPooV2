@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>💩 ClickPoo Ultimate</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Container de notifications -->
+    <div id="notifications-container" class="notifications-container"></div>
+
+    <!-- Écran d'accueil minimaliste -->
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-content">
+            <div class="welcome-header">
+                <img src="icone.png" alt="ClickPoo Ultimate" class="welcome-image">
+                <h1>ClickPoo</h1>
+                <p>L'aventure de merde ultime !</p>
+            </div>
+            
+            <div class="stats-preview">
+                <h3>📊 Progression Sauvegardée</h3>
+                <div class="saved-stats">
+                    <div class="stat-row">
+                        <span>Score:</span>
+                        <span id="saved-score" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Niveau:</span>
+                        <span id="saved-level" class="stat-value">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Pièces:</span>
+                        <span id="saved-coins" class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-menu">
+                <button id="new-game-btn" class="btn btn--primary btn--large">
+                    🆕 Nouvelle Partie
+                </button>
+                <button id="continue-game-btn" class="btn btn--secondary btn--large">
+                    ▶️ Continuer
+                </button>
+                <button id="high-score-btn" class="btn btn--outline btn--large">
+                    🏆 High Score
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal High Score -->
+    <div id="high-score-modal" class="overlay">
+        <div class="modal-content">
+            <h3>🏆 Meilleurs Scores</h3>
+            <div class="high-score-stats">
+                <div class="score-stat">
+                    <span class="score-label">Score Maximum:</span>
+                    <span id="best-score" class="score-value">0</span>
+                </div>
+                <div class="score-stat">
+                    <span class="score-label">Niveau Maximum:</span>
+                    <span id="best-level" class="score-value">1</span>
+                </div>
+                <div class="score-stat">
+                    <span class="score-label">Combo Maximum:</span>
+                    <span id="best-combo" class="score-value">1.0x</span>
+                </div>
+                <div class="score-stat">
+                    <span class="score-label">Temps Total:</span>
+                    <span id="total-time" class="score-value">0s</span>
+                </div>
+            </div>
+            <button id="close-high-score" class="btn btn--primary">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Écran de jeu principal -->
+    <div id="game-screen" class="screen">
+        <!-- Header cubique -->
+        <header class="mobile-header">
+            <div class="header-stats">
+                <div class="stat-group">
+                    <span class="stat-icon">💩</span>
+                    <div class="stat-info">
+                        <span id="score" class="stat-value">0</span>
+                        <span class="stat-label">Score</span>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <span class="stat-icon">🪙</span>
+                    <div class="stat-info">
+                        <span id="coins" class="stat-value">0</span>
+                        <span class="stat-label">Pièces</span>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-info">
+                        <span id="level" class="stat-value">1</span>
+                        <span class="stat-label">Niveau</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Barre XP pixelisée -->
+            <div class="xp-container">
+                <div class="xp-bar">
+                    <div id="xp-progress" class="xp-fill"></div>
+                </div>
+                <div class="xp-text">
+                    XP: <span id="current-xp">0</span> / <span id="needed-xp">200</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Zone de jeu principale -->
+        <main class="game-main">
+            <!-- Bouton caca mignon central -->
+            <div class="clicker-section">
+                <div id="main-clicker" class="main-clicker">
+                    <div class="clicker-content">
+                        <img id="main-icon" class="main-icon" src="icone.png" alt="Caca mignon pixel art" draggable="false">
+                    </div>
+                    <div class="click-effect"></div>
+                </div>
+                
+                <!-- Stats rapides -->
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-icon">👆</span>
+                        <span id="total-clicks-display" class="stat-value">0</span>
+                        <span class="stat-label">clics</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">💩</span>
+                        <span id="clicks-per-second" class="stat-value">0.0</span>
+                        <span class="stat-label">par sec</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Auto-Clickers sur la page de jeu -->
+            <div class="auto-clickers-section">
+                <h3>🤖 Auto-Clickers</h3>
+                <div class="auto-clickers-grid" id="game-auto-clickers-list">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </div>
+        </main>
+        
+        <!-- Navigation mobile cubique -->
+        <nav class="mobile-nav">
+            <button id="home-btn" class="nav-btn">
+                <img src="accueil.png" alt="Accueil" class="nav-icon">
+                <span class="nav-label">Accueil</span>
+            </button>
+            <button id="game-btn" class="nav-btn nav-btn--active">
+                <img src="jeu.png" alt="Jeu" class="nav-icon">
+                <span class="nav-label">Jeu</span>
+            </button>
+            <button id="shop-btn" class="nav-btn">
+                <img src="boutique.png" alt="Boutique" class="nav-icon">
+                <span class="nav-label">Boutique</span>
+            </button>
+            <button id="profile-btn" class="nav-btn">
+                <img src="profil.png" alt="Profil" class="nav-icon">
+                <span class="nav-label">Profil</span>
+                <div id="notification-dot" class="notification-dot hidden"></div>
+            </button>
+        </nav>
+        
+        <!-- Conteneurs d'effets -->
+        <div id="particles" class="particles-container"></div>
+    </div>
+
+    <!-- Écran boutique -->
+    <div id="shop-screen" class="screen">
+        <header class="shop-header">
+            <button id="back-from-shop" class="back-btn">
+                <img src="fleche.png" alt="Retour" class="back-icon">
+                <span class="back-text">Retour</span>
+            </button>
+            <h2>🛍️ Boutique Auto-Clickers</h2>
+            <div class="shop-coins">
+                <span>🪙</span>
+                <span id="shop-coins-value">0</span>
+            </div>
+        </header>
+        
+        <main class="shop-main">
+            <div class="shop-section">
+                <h3>🤖 Auto-Clickers</h3>
+                <div class="section-desc">Génèrent automatiquement des points</div>
+                <div id="auto-clickers-list" class="shop-items">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Écran profil avec couleurs et défis -->
+    <div id="profil-screen" class="screen">
+        <header class="profile-header">
+            <button id="back-from-profile" class="back-btn">
+                <img src="fleche.png" alt="Retour" class="back-icon">
+                <span class="back-text">Retour</span>
+            </button>
+            <h2>👤 Profil</h2>
+            <div class="profile-level-display">
+                <span>Niveau <span id="profile-level">1</span></span>
+            </div>
+        </header>
+        
+        <main class="profile-main">
+            <!-- Statistiques -->
+            <section class="profile-section">
+                <h3>📊 Statistiques</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Temps de jeu</span>
+                        <span id="play-time" class="stat-value">0s</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Clics totaux</span>
+                        <span id="total-clicks" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Clics manuels</span>
+                        <span id="manual-clicks" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Pièces gagnées</span>
+                        <span id="total-coins-earned" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Niveau max</span>
+                        <span id="max-level" class="stat-value">1</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Combo max</span>
+                        <span id="max-combo" class="stat-value">1.0x</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Défis actifs -->
+            <section class="profile-section">
+                <h3>🎯 Défis Actifs</h3>
+                <div id="challenges-list" class="challenges-grid">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </section>
+
+            <!-- Auto-clickers actifs -->
+            <section class="profile-section">
+                <h3>🤖 Auto-Clickers Actifs</h3>
+                <div id="active-auto-clickers" class="active-list">
+                    <p class="no-active">Aucun auto-clicker actif</p>
+                </div>
+            </section>
+            
+            <!-- Achievements -->
+            <section class="profile-section">
+                <h3>🏆 Achievements</h3>
+                <div id="achievements-list" class="achievements-grid">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Overlay de confirmation -->
+    <div id="confirm-overlay" class="overlay">
+        <div class="confirm-dialog">
+            <h3>🆕 Nouvelle Partie</h3>
+            <p>Voulez-vous vraiment recommencer ? Votre progression sera perdue !</p>
+            <div class="confirm-actions">
+                <button id="confirm-new-game" class="btn btn--error">Oui, recommencer</button>
+                <button id="cancel-new-game" class="btn btn--secondary">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banners d'effets -->
+    <div id="boost-banner" class="boost-banner">
+        <div class="boost-content">
+            <span class="boost-text">🌶️ BOOST CHILI x10 ACTIF !</span>
+            <span class="boost-timer">
+                <span id="boost-timer-value">30</span>s
+            </span>
+        </div>
+    </div>
+    
+    <div id="combo-display" class="combo-display">
+        <span class="combo-text">🔥 COMBO x<span id="combo-multiplier">1.0</span></span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
