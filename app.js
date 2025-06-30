@@ -292,18 +292,14 @@ class ClickPooUltimate {
 
         // Auto-clickers et couleurs
         this.elements.autoClickersList = document.getElementById('auto-clickers-list');
-        console.log('[initElements] autoClickersList:', this.elements.autoClickersList);
         this.elements.gameAutoClickersList = document.getElementById('game-auto-clickers-list');
-        console.log('[initElements] gameAutoClickersList:', this.elements.gameAutoClickersList);
         this.elements.activeAutoClickers = document.getElementById('active-auto-clickers');
-        console.log('[initElements] activeAutoClickers:', this.elements.activeAutoClickers);
 
         // Défis
         this.elements.challengesList = document.getElementById('challenges-list');
 
         // Boutique
         this.elements.shopCoinsValue = document.getElementById('shop-coins-value');
-        console.log('[initElements] shopCoinsValue:', this.elements.shopCoinsValue);
         
         // Profil
         this.elements.profileLevel = document.getElementById('profile-level');
@@ -327,141 +323,58 @@ class ClickPooUltimate {
     }
 
     setupEventListeners() {
-        // Navigation principale
-        if (this.elements.newGameBtn) {
-            this.elements.newGameBtn.addEventListener('click', (e) => {
+        const addPointer = (el, handler) => {
+            if (!el) return;
+            el.addEventListener('click', handler);
+            el.addEventListener('touchend', (e) => {
                 e.preventDefault();
-                this.initAudioContext();
-                this.showNewGameConfirm();
+                handler(e);
             });
-        }
-        if (this.elements.continueGameBtn) {
-            this.elements.continueGameBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.initAudioContext();
-                this.startGame();
-                this.showScreen('game');
-            });
-        }
-        if (this.elements.highScoreBtn) {
-            this.elements.highScoreBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.initAudioContext();
-                this.showHighScore();
-            });
-        }
-        
-        // Navigation en bas - CORRECTION DES LIENS
-        if (this.elements.homeBtn) {
-            this.elements.homeBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('welcome');
-            });
-            this.elements.homeBtn.querySelectorAll('*').forEach(child => {
-                child.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showScreen('welcome');
-                });
-            });
-        }
-        if (this.elements.gameBtn) {
-            this.elements.gameBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('game');
-            });
-            this.elements.gameBtn.querySelectorAll('*').forEach(child => {
-                child.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showScreen('game');
-                });
-            });
-        }
-        if (this.elements.shopBtn) {
-            // Supprime tous les anciens event listeners (sécurité)
-            this.elements.shopBtn.replaceWith(this.elements.shopBtn.cloneNode(true));
-            this.elements.shopBtn = document.getElementById('shop-btn');
-            this.elements.shopBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('shop');
-            });
-            this.elements.shopBtn.querySelectorAll('*').forEach(child => {
-                child.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showScreen('shop');
-                });
-            });
-        }
-        if (this.elements.profileBtn) {
-            // Supprime tous les anciens event listeners (sécurité)
-            this.elements.profileBtn.replaceWith(this.elements.profileBtn.cloneNode(true));
-            this.elements.profileBtn = document.getElementById('profile-btn');
-            this.elements.profileBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('profil');
-            });
-            this.elements.profileBtn.querySelectorAll('*').forEach(child => {
-                child.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    this.showScreen('profil');
-                });
-            });
-        }
-        if (this.elements.backFromShop) {
-            this.elements.backFromShop.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('game');
-            });
-        }
-        if (this.elements.backFromProfile) {
-            this.elements.backFromProfile.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showScreen('game');
-            });
-        }
+        };
 
-        // High Score Modal
-        if (this.elements.closeHighScore) {
-            this.elements.closeHighScore.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.hideHighScore();
-            });
-        }
-        if (this.elements.highScoreModal) {
-            this.elements.highScoreModal.addEventListener('click', (e) => {
-                if (e.target === this.elements.highScoreModal) {
-                    this.hideHighScore();
-                }
-            });
-        }
+        addPointer(this.elements.newGameBtn, (e) => {
+            e.preventDefault();
+            this.initAudioContext();
+            this.showNewGameConfirm();
+        });
 
-        // Clic principal avec support tactile
-        if (this.elements.mainClicker) {
-            this.elements.mainClicker.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.initAudioContext();
-                this.handleMainClick(e);
-            });
-            this.elements.mainClicker.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                this.initAudioContext();
-                this.handleMainClick(e);
-            });
-        }
+        addPointer(this.elements.continueGameBtn, (e) => {
+            e.preventDefault();
+            this.initAudioContext();
+            this.startGame();
+            this.showScreen('game');
+        });
 
-        // Nouvelle partie
-        if (this.elements.confirmNewGame) {
-            this.elements.confirmNewGame.addEventListener('click', (e) => {
+        addPointer(this.elements.highScoreBtn, (e) => {
+            e.preventDefault();
+            this.initAudioContext();
+            this.showHighScore();
+        });
+
+        document.querySelectorAll('[data-screen]').forEach(btn => {
+            addPointer(btn, (e) => {
                 e.preventDefault();
-                this.newGame();
-                this.showScreen('game');
+                this.showScreen(btn.dataset.screen);
             });
-        }
-        if (this.elements.cancelNewGame) {
-            this.elements.cancelNewGame.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.hideNewGameConfirm();
-            });
-        }
+        });
+
+        addPointer(this.elements.mainClicker, (e) => {
+            e.preventDefault();
+            this.initAudioContext();
+            this.handleMainClick(e);
+        });
+
+        addPointer(this.elements.confirmNewGame, (e) => {
+            e.preventDefault();
+            this.newGame();
+            this.showScreen('game');
+        });
+
+        addPointer(this.elements.cancelNewGame, (e) => {
+            e.preventDefault();
+            this.hideNewGameConfirm();
+        });
+
         if (this.elements.confirmOverlay) {
             this.elements.confirmOverlay.addEventListener('click', (e) => {
                 if (e.target === this.elements.confirmOverlay) {
@@ -470,14 +383,20 @@ class ClickPooUltimate {
             });
         }
 
-        // Auto-activation audio
-        document.addEventListener('click', () => {
-            this.initAudioContext();
+        addPointer(this.elements.closeHighScore, (e) => {
+            e.preventDefault();
+            this.hideHighScore();
         });
-        
-        document.addEventListener('touchstart', () => {
-            this.initAudioContext();
-        });
+        if (this.elements.highScoreModal) {
+            this.elements.highScoreModal.addEventListener('click', (e) => {
+                if (e.target === this.elements.highScoreModal) {
+                    this.hideHighScore();
+                }
+            });
+        }
+
+        document.addEventListener('click', () => this.initAudioContext());
+        document.addEventListener('touchstart', () => this.initAudioContext());
     }
 
     setupGameTimer() {
@@ -709,7 +628,6 @@ class ClickPooUltimate {
     }
 
     showScreen(screenName) {
-        console.log('[showScreen] Appel avec', screenName);
         // Masquer tous les écrans
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.remove('active');
@@ -735,7 +653,6 @@ class ClickPooUltimate {
             if (targetScreen.querySelector('.profile-main')) {
                 targetScreen.querySelector('.profile-main').scrollTop = 0;
             }
-            console.log('[showScreen] Ecran affiché :', targetScreen.id);
         } else {
             console.warn('[showScreen] Ecran non trouvé pour', screenName);
         }
@@ -758,16 +675,12 @@ class ClickPooUltimate {
 
         // Mettre à jour le contenu spécifique à chaque écran
         if (screenName === 'shop') {
-            console.log('[showScreen] Appel de renderShop() pour l\'écran boutique');
             this.renderShop();
         } else if (screenName === 'profil') {
-            console.log('[showScreen] Appel de renderProfile() pour l\'écran profil');
             this.renderProfile();
         } else if (screenName === 'welcome') {
-            console.log('[showScreen] Appel de updateStatsPreview() pour l\'écran accueil');
             this.updateStatsPreview();
         } else if (screenName === 'game') {
-            console.log('[showScreen] Appel de renderGameAutoClickers() pour l\'écran jeu');
             this.renderGameAutoClickers();
         }
     }
@@ -1057,10 +970,8 @@ class ClickPooUltimate {
         const autoClicker = this.config.autoClickers[index];
         const intervalKey = `auto_${index}`;
         
-        console.log(`[setupAutoClicker] Configuration de ${autoClicker.name} (index: ${index})`);
         
         if (this.autoClickerIntervals[intervalKey]) {
-            console.log(`[setupAutoClicker] Nettoyage de l'ancien intervalle pour ${autoClicker.name}`);
             clearInterval(this.autoClickerIntervals[intervalKey]);
         }
         
@@ -1071,11 +982,8 @@ class ClickPooUltimate {
         this.autoClickerIntervals[intervalKey] = setInterval(() => {
             // Vérification stricte de l'écran actif
             if (this.currentScreen !== 'game') {
-                console.log(`[setupAutoClicker] ${autoClicker.name} ignoré - écran actuel: ${this.currentScreen}`);
                 return;
             }
-            
-            console.log(`[setupAutoClicker] ${autoClicker.name} génère un clic automatique`);
             
             // Calcul du bonus de boost
             const boostMultiplier = this.gameState.boostActive ? 10 : 1;
@@ -1106,7 +1014,6 @@ class ClickPooUltimate {
             this.updateDisplay();
         }, autoClicker.speed);
         
-        console.log(`[setupAutoClicker] ${autoClicker.name} configuré avec intervalle de ${autoClicker.speed}ms`);
     }
 
     restoreAutoClickers() {
@@ -1118,14 +1025,12 @@ class ClickPooUltimate {
     }
 
     renderShop() {
-        console.log('[renderShop] Début du rendu de la boutique');
         
         if (!this.elements.shopCoinsValue) {
             console.error('[renderShop] shopCoinsValue non trouvé');
             return;
         }
         
-        console.log('[renderShop] Mise à jour des pièces:', this.gameState.coins);
         this.elements.shopCoinsValue.textContent = this.formatNumber(this.gameState.coins);
         
         if (!this.elements.autoClickersList) {
@@ -1133,14 +1038,12 @@ class ClickPooUltimate {
             return;
         }
         
-        console.log('[renderShop] Génération des auto-clickers');
         this.elements.autoClickersList.innerHTML = '';
         this.config.autoClickers.forEach((autoClicker, index) => {
             const owned = this.gameState.autoClickers[index] || 0;
             const cost = autoClicker.baseCost * Math.pow(2, owned);
             const canAfford = this.gameState.coins >= cost;
             
-            console.log(`[renderShop] ${autoClicker.name}: possédés=${owned}, coût=${cost}, peutAcheter=${canAfford}`);
             
             const item = document.createElement('div');
             item.className = 'shop-item';
@@ -1169,7 +1072,6 @@ class ClickPooUltimate {
                 const handlePurchase = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log(`[renderShop] Achat de ${autoClicker.name}`);
                     this.purchaseAutoClicker(index);
                 };
                 button.addEventListener('click', handlePurchase);
@@ -1183,7 +1085,6 @@ class ClickPooUltimate {
             this.elements.autoClickersList.appendChild(item);
         });
         
-        console.log('[renderShop] Rendu terminé');
     }
 
     renderProfile() {
@@ -1662,7 +1563,6 @@ class ClickPooUltimate {
 let game;
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[INIT] DOMContentLoaded');
     game = new ClickPooUltimate();
 });
 
