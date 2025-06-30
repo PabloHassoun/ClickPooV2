@@ -157,19 +157,19 @@
         
         <!-- Navigation mobile cubique -->
         <nav class="mobile-nav">
-            <button id="home-btn" class="nav-btn">
+            <button id="home-btn" class="nav-btn" data-screen="welcome">
                 <img src="accueil.png" alt="Accueil" class="nav-icon">
                 <span class="nav-label">Accueil</span>
             </button>
-            <button id="game-btn" class="nav-btn nav-btn--active">
+            <button id="game-btn" class="nav-btn nav-btn--active" data-screen="game">
                 <img src="jeu.png" alt="Jeu" class="nav-icon">
                 <span class="nav-label">Jeu</span>
             </button>
-            <button id="shop-btn" class="nav-btn">
+            <button id="shop-btn" class="nav-btn" data-screen="shop">
                 <img src="boutique.png" alt="Boutique" class="nav-icon">
                 <span class="nav-label">Boutique</span>
             </button>
-            <button id="profile-btn" class="nav-btn">
+            <button id="profile-btn" class="nav-btn" data-screen="profil">
                 <img src="profil.png" alt="Profil" class="nav-icon">
                 <span class="nav-label">Profil</span>
                 <div id="notification-dot" class="notification-dot hidden"></div>
@@ -183,7 +183,7 @@
     <!-- Écran boutique -->
     <div id="shop-screen" class="screen">
         <header class="shop-header">
-            <button id="back-from-shop" class="back-btn">
+            <button id="back-from-shop" class="back-btn" data-screen="game">
                 <img src="fleche.png" alt="Retour" class="back-icon">
                 <span class="back-text">Retour</span>
             </button>
@@ -208,7 +208,7 @@
     <!-- Écran profil avec couleurs et défis -->
     <div id="profil-screen" class="screen">
         <header class="profile-header">
-            <button id="back-from-profile" class="back-btn">
+            <button id="back-from-profile" class="back-btn" data-screen="game">
                 <img src="fleche.png" alt="Retour" class="back-icon">
                 <span class="back-text">Retour</span>
             </button>
